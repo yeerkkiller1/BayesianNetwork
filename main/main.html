@@ -1,0 +1,139 @@
+<div class="height100vh">
+<div class="flex column height100p borderBox" style="padding: 10px; padding-bottom: 28px">
+	
+<div>
+	<div>
+		<div>Node Width: <input ng-model="nodeWidth" type="number" /></div>
+		<div>Node Height: <input ng-model="nodeHeight" type="number" /></div>
+		<div><label>Show Conditional Probabilities: <input ng-model="scope.showFactors" type="checkbox" /></label></div>
+		<div>Simulation Count: <input ng-model="simulationCount" type="number" /></div>
+		
+		<div>
+			<div style="font-size: 20px; margin-top: 10px; margin-bottom: 6px;">
+				Random
+			</div>
+			<div style="margin: 8px">
+				<div><button ng-click="unobserveAll()">Unobserve All</button></div>
+				<div><button ng-click="observeRandom()">Observe Random</button></div>
+				<div><button ng-click="calculateAll()">Calculate All</button></div>
+				<div>Check Count: <input ng-model="checkCount" type="number" /></div>
+				<div><button ng-click="checkNTimes(checkCount)">Check N Times</button></div>
+			</div>
+		</div>
+		
+		<div>
+			<div style="font-size: 20px; margin-top: 10px; margin-bottom: 6px;">
+				Selected Node
+			</div>
+			<div style="margin: 8px">
+				<div>
+					<div ng-if="selectedNode">
+						<span>{{selectedNode.variable.name}}</span>
+						<span ng-if="isDefined(selectedNode.variable.valueIndex)">
+							= {{ selectedNode.variable.valuePossible[selectedNode.variable.valueIndex] }}
+						</span>
+						
+						<div>
+							<span ng-repeat="case in [selectedNode.directFactors.variables[0]]">
+								<button class="debug" ng-repeat="possible in case.chance.valuePossible track by $index"
+									ng-click="selectedNode.variable.valueIndex = $index">
+									{{node.variable.name}} = {{possible}}
+								</button>
+								<button ng-click="selectedNode.variable.valueIndex = undefined">-</button>
+							</span>
+						</div>
+					</div>
+					
+					<span ng-if="!selectedNode">Click a node to select it</span>
+				</div>
+				<div>
+					<button ng-disabled="!selectedNode" ng-click="simulateChance(selectedNode)">Simulate</button>
+					<button ng-disabled="!selectedNode" ng-click="calculateChanceBruteForce(selectedNode)">Calculate Slow</button>
+					<button ng-disabled="!selectedNode" ng-click="calculateChanceHeuristic(selectedNode)">Calculate Fast</button>
+					<button ng-disabled="!selectedNode" ng-click="calculateChance(selectedNode)">Calculate</button>
+					<button ng-disabled="!selectedNode" ng-click="markPotentialRelevant(selectedNode)">Potential</button>
+					<button ng-disabled="!selectedNode" ng-click="markRelevant(selectedNode)">Relevant</button>
+					<button ng-disabled="!selectedNode" ng-click="markHeuristicRelevant(selectedNode)">Heuristic</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="debug relative width100p height100p">
+	<div class="debug absolute node"
+	     ng-repeat="node in data"
+		 ng-style="{
+		 	 left: xPos(node.displayPos.x) * 100 + '%',
+			 top: yPos(node.displayPos.y) * 100 + '%',
+			 width: adjNodeWidth() * 100 + '%',
+			 height: adjNodeHeight() * 100 + '%'
+		 }"
+		 ng-click="selectNode(node)"
+		 ng-class="{
+		 	 selected: selectedNode === node,
+			 potentialRelevant: node.isPotentialRelevant,
+			 relevant: node.isRelevant,
+			 observed: isDefined(node.variable.valueIndex)
+		 }">
+		<div>
+			{{node.variable.name}}
+			<span ng-if="isDefined(node.variable.valueIndex)">
+				= {{ node.variable.valuePossible[node.variable.valueIndex] }}
+			</span>
+		</div>
+		<div>{{node.variable.directFactors}}</div>
+		<table ng-if="scope.showChances">
+			<thead>
+				<tr>
+					<th class="debug" ng-repeat="value in node.absoluteChance.valuePossible track by $index">
+						{{value}}
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="debug" ng-repeat="chance in node.absoluteChance.valueChance track by $index">
+						{{num(chance)}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<table ng-if="scope.showFactors">
+			<thead>
+				<tr ng-repeat="case in [node.directFactors.variables[0]]">
+					<th class="debug" ng-repeat="var in case.values">
+						{{var.name}}
+					</th>
+					<th class="debug" ng-repeat="possible in case.chance.valuePossible track by $index">
+						{{node.variable.name}} = {{possible}}
+					</th>
+					<th><button ng-click="node.variable.valueIndex = undefined">-</button></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="case in node.directFactors.variables">
+					<td class="debug" ng-repeat="value in case.values">
+						{{value.valuePossible[value.valueIndex]}}
+					</td>
+					<td class="debug" ng-repeat="chance in case.chance.valueChance track by $index">
+						{{chance}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div ng-repeat="node in data">
+		<svg height="100%" width="100%"
+			 class="debug absolute clickThrough" 
+			 ng-repeat="child in node.children">
+			<line 	ng-attr-x1="{{(xPos(node.displayPos.x) + adjNodeWidth() * 0.5) * 100 + '%'}}" 
+					ng-attr-y1="{{(yPos(node.displayPos.y) + adjNodeHeight()) * 100 + '%'}}" 
+					ng-attr-x2="{{(xPos(child.displayPos.x) + adjNodeWidth() * 0.5) * 100 + '%'}}" 
+					ng-attr-y2="{{yPos(child.displayPos.y) * 100 + '%'}}"
+					style="stroke: hotpink; stroke-width: 1px" />
+		</svg>
+	</div>
+</div>
+
+</div>
+</div>

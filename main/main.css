@@ -1,0 +1,115 @@
+.mediumMargin {
+	margin: 8px;
+}
+
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+}
+.flex {
+  display: flex;
+}
+.column {
+  flex-direction: column;
+}
+.borderBox {
+  box-sizing: border-box;
+}
+
+.flashin {
+	animation-duration: 1s;
+	animation-name: flashin;	
+}
+.hideOverflow {
+  overflow: hidden;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+body {
+  margin: 0px;
+}
+
+.margin0 {
+  margin: 0px;
+}
+.height100vh {
+  height: 100vh;
+}
+.height100p {
+  height: 100%;
+}
+.width100p {
+  width: 100%;
+}
+
+
+.marginBottom0 {
+  margin-bottom: 0px;
+}
+
+@keyframes flashin {
+  from {
+    background: transparent; 
+  }
+
+  to {
+    background: hsla(100, 75%, 75%, 0.5);
+  }
+}
+
+.debug {
+  outline: 1px solid hotpink;
+}
+
+.clickThrough {
+  pointer-events: none;
+}
+
+.node {
+  cursor: pointer;
+  z-index: 0;
+}
+.node:hover {
+  background: hsla(180, 75%, 85%, 0.75);
+}
+.node.selected:hover {
+  background: hsla(180, 75%, 85%, 0.25);
+}
+.node.selected {
+  background: hsla(180, 75%, 85%, 1);
+}
+
+.node.observed {
+  background: hsla(110, 05%, 85%, 1);
+}
+
+.node.potentialRelevant {
+  background: hsla(60, 75%, 85%, 1);
+}
+
+.node.relevant {
+  background: hsla(110, 75%, 85%, 1);
+}
+
+.node.observed.relevant:before {
+  content: " ";
+  position: absolute;
+  z-index: -1;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+   
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+     hsla(110, 05%, 85%, 1) 10px,
+     hsla(110, 05%, 85%, 1) 20px
+  ),;
+}
