@@ -783,7 +783,7 @@ class Base extends Directive {
 		console.timeEnd("Audit Heuristic");
 		*/
 		
-		
+		/*
 		console.time("Brute force calculate");
 		var realChance = calculate(node, this.data, this.nodeLookup);
 		console.timeEnd("Brute force calculate");
@@ -791,6 +791,7 @@ class Base extends Directive {
 		if(!chanceEqual(chance, realChance)) {
 			throw new Error("Heuristics provided wrong chance");
 		}
+		*/
 	}
 	
 	public calculateChance(node: Node) {
@@ -1569,4 +1570,96 @@ xml = `
 </DEFINITION>
 </NETWORK>
 </BIF>
+`;
+
+xml = `
+<?xml version="1.0" encoding="UTF-8"?>
+<BIF VERSION="0.3"  xmlns="http://www.cs.ubc.ca/labs/lci/fopi/ve/XMLBIFv0_3"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.cs.ubc.ca/labs/lci/fopi/ve/XMLBIFv0_3 http://www.cs.ubc.ca/labs/lci/fopi/ve/XMLBIFv0_3/XMLBIFv0_3.xsd">
+<NETWORK>
+<NAME>Untitled</NAME>
+<PROPERTY>detailed = </PROPERTY>
+<PROPERTY>short = </PROPERTY>
+
+<VARIABLE TYPE="nature">
+	<NAME>Traveling</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7273.0, 5050.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Foreign Purchase</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7237.0, 5153.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Fraud</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7421.0, 5102.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Internet</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7542.0, 5175.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Owns Computer</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7655.0, 5050.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Has Computer Purchase</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7752.0, 5197.0)</PROPERTY>
+</VARIABLE>
+
+<DEFINITION>
+	<FOR>Traveling</FOR>
+	<TABLE>0.05 0.95</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Foreign Purchase</FOR>
+	<GIVEN>Traveling</GIVEN>
+	<GIVEN>Fraud</GIVEN>
+	<TABLE>0.9 0.1 0.9 0.1 0.1 0.9 0.01 0.99</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Fraud</FOR>
+	<GIVEN>Traveling</GIVEN>
+	<TABLE>0.01 0.99 0.004 0.996</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Internet</FOR>
+	<GIVEN>Fraud</GIVEN>
+	<GIVEN>Owns Computer</GIVEN>
+	<TABLE>0.02 0.98 0.011 0.989 0.01 0.99 0.001 0.999</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Owns Computer</FOR>
+	<TABLE>0.6 0.4</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Has Computer Purchase</FOR>
+	<GIVEN>Owns Computer</GIVEN>
+	<TABLE>0.1 0.9 0.001 0.999</TABLE>
+</DEFINITION>
+</NETWORK>
+</BIF>
+
 `;
